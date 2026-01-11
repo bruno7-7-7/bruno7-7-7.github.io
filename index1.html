@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Machtioka Signs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple-dark: #2a003f;
+      --purple: #6a0dad;
+      --purple-light: #c084fc;
+      --background: #f8f0ff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Lexend', sans-serif;
+      background: linear-gradient(145deg, var(--purple-dark), var(--purple));
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    .button {
+      background-color: var(--purple-light);
+      color: #2a003f;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s ease;
+      animation: fadeInUp 2s ease-in-out;
+    }
+
+    .button:hover {
+      background-color: white;
+      color: var(--purple);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.8rem;
+      color: #e0d4f0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <h1>Machtioka Signs</h1>
+  <p>Aprende Lengua de Señas Mexicana con nuestra aplicación interactiva. Hecha por Machtioka, para todos. Conecta, comunica y comprende el mundo de una nueva manera.</p>
+  <a class="button" href="https://drive.google.com/tu-enlace-aqui" target="_blank" rel="noopener noreferrer">
+    Acceder a la App
+  </a>
+
+  <footer>
+    © 2025 Machtioka. Todos los derechos reservados.
+  </footer>
+</body>
+</html>
