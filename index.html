@@ -1,166 +1,531 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Machtioka Signs</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    :root {
-      --purple-dark: #1e0030;
-      --purple: #6a0dad;
-      --purple-light: #c084fc;
-      --white: #ffffff;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-AFT: Innovación en Maquila de Seguridad Industrial</title>
+    
+    <!-- Chosen Palette: Warm Neutrals with Teal & Rust Accents -->
+    <!-- Application Structure Plan: The SPA uses a tabbed dashboard structure. 
+         1. 'Origen': Connects the user's uploaded handwritten objective to the new vision.
+         2. 'La Invención': Details the patentable product (C-AFT) with interactive CSS-based diagrams (NO SVG).
+         3. 'Datos y Viabilidad': Uses Chart.js to prove market value and safety impact.
+         This structure logically moves the user from the raw idea -> the concrete invention -> the business justification. -->
+    <!-- Visualization & Content Choices: 
+         - CSS Abstract Model -> Goal: Organize & Inform -> Interactive hotspots explain the invention on a garment without using SVG.
+         - Radar Chart (Chart.js) -> Goal: Compare -> Compares traditional workwear vs C-AFT across key metrics (Safety, Corporate Image, Cost).
+         - Bar Chart (Chart.js) -> Goal: Inform -> Shows projected reduction in workplace accidents.
+         All visualizations are contained in properly styled responsive divs. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stone: {
+                            50: '#fafaf9',
+                            100: '#f5f5f4',
+                            200: '#e7e5e4',
+                            800: '#292524',
+                            900: '#1c1917',
+                        },
+                        teal: {
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        },
+                        rust: {
+                            500: '#d97706',
+                            600: '#b45309',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
-    body {
-      font-family: 'Lexend', sans-serif;
-      background: radial-gradient(circle at top left, var(--purple), var(--purple-dark));
-      color: white;
-      min-height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding-top: 80px;
-    }
+    <style>
+        /* Essential Chart Container Constraints */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
 
-    header {
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 1rem 2rem;
-      text-align: left;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--white);
-      z-index: 1000;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
+        /* Custom Scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f5f4; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
 
-    .hero {
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      padding: 3rem;
-      text-align: center;
-      max-width: 600px;
-      margin-top: 3rem;
-      backdrop-filter: blur(10px);
-      z-index: 2;
-    }
-
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      color: var(--white);
-    }
-
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      color: #e0d4f0;
-    }
-
-    .button {
-      background: linear-gradient(135deg, var(--purple-light), var(--white));
-      color: var(--purple-dark);
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 40px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 5px 15px rgba(192, 132, 252, 0.4);
-      transition: all 0.3s ease;
-    }
-
-    .button:hover {
-      transform: scale(1.05);
-      background: var(--white);
-      color: var(--purple);
-    }
-
-    footer {
-      width: 100%;
-      text-align: center;
-      padding: 1rem;
-      margin-top: auto;
-      font-size: 0.85rem;
-      color: #ddd;
-      background-color: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(5px);
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      z-index: 999;
-    }
-
-    /* Background Particles */
-    .particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: repeating-radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 2px);
-      background-size: 100px 100px;
-      animation: drift 20s linear infinite;
-      z-index: 0;
-    }
-
-    @keyframes drift {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(-50px, -50px); }
-    }
-
-    @media (max-width: 600px) {
-      .hero {
-        margin: 1rem;
-        padding: 2rem;
-      }
-
-      h1 {
-        font-size: 2.2rem;
-      }
-
-      .button {
-        flex-direction: column;
-        font-size: 1rem;
-        padding: 0.8rem 1.2rem;
-      }
-    }
-  </style>
+        /* Tab transition */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body>
-  <div class="particles"></div>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased min-h-screen flex flex-col">
 
-  <header>Machtioka</header>
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <span class="text-2xl font-bold text-teal-700">⬢ ProTex</span>
+                        <span class="text-lg font-medium text-stone-500">Innovación</span>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8 items-center" id="nav-buttons">
+                    <button onclick="switchTab('origen')" class="nav-btn text-teal-700 border-b-2 border-teal-700 px-1 pt-1 text-sm font-medium transition-colors" data-target="origen">El Objetivo</button>
+                    <button onclick="switchTab('invencion')" class="nav-btn text-stone-500 hover:text-stone-700 hover:border-stone-300 border-b-2 border-transparent px-1 pt-1 text-sm font-medium transition-colors" data-target="invencion">La Invención (C-AFT)</button>
+                    <button onclick="switchTab('datos')" class="nav-btn text-stone-500 hover:text-stone-700 hover:border-stone-300 border-b-2 border-transparent px-1 pt-1 text-sm font-medium transition-colors" data-target="datos">Análisis y Mercado</button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="sm:hidden flex justify-around border-t border-stone-100 bg-stone-50 pb-2 pt-2" id="nav-buttons-mobile">
+            <button onclick="switchTab('origen')" class="nav-btn-mobile text-teal-700 font-semibold text-xs px-2 py-1 bg-teal-50 rounded" data-target="origen">Objetivo</button>
+            <button onclick="switchTab('invencion')" class="nav-btn-mobile text-stone-600 font-medium text-xs px-2 py-1" data-target="invencion">Invención</button>
+            <button onclick="switchTab('datos')" class="nav-btn-mobile text-stone-600 font-medium text-xs px-2 py-1" data-target="datos">Mercado</button>
+        </div>
+    </nav>
 
-  <div class="hero">
-    <h1>Machtioka Signs</h1>
-    <p>Explora una nueva forma de comunicar. Aprende Lengua de Señas Mexicana con nuestra aplicación interactiva. Hecha por Machtioka, pensada para ti.</p>
-    <a class="button" href="https://drive.google.com/file/d/1fBX1v5uS52C68gM0sDNQnmBXo8q3AlgF/view?usp=drive_link" target="_blank" rel="noopener noreferrer">
-      <i class="fa-solid fa-arrow-right-to-bracket"></i> Acceder a la App
-    </a>
-  </div>
+    <!-- Main Content -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-  <footer>
-    © 2025 Machtioka. Todos los derechos reservados.
-  </footer>
+        <!-- TAB 1: EL ORIGEN -->
+        <section id="origen" class="tab-content active">
+            <div class="max-w-3xl mx-auto">
+                <h1 class="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-6 tracking-tight">Del Apunte a la Revolución Industrial</h1>
+                
+                <p class="text-lg text-stone-600 mb-8 leading-relaxed">
+                    Esta sección analiza la premisa inicial extraída del mapa conceptual original. Aquí establecemos la base sobre la cual se desarrollará la innovación, asegurando que se mantenga fiel a la necesidad central de la industria de la confección de seguridad.
+                </p>
+
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-stone-200 relative overflow-hidden mb-8">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-stone-100 rounded-bl-full -z-10"></div>
+                    <h2 class="text-sm font-bold tracking-widest text-teal-600 uppercase mb-4">El Objetivo Original</h2>
+                    <blockquote class="text-xl md:text-2xl font-serif text-stone-800 italic border-l-4 border-teal-500 pl-4 py-2">
+                        "Diseñar, confeccionar y comercializar ropa de trabajo y uniformes industriales con base en las necesidades de nuestros clientes para la mejora de su imagen corporativa y seguridad."
+                    </blockquote>
+                    
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-100">
+                            <h3 class="font-bold text-stone-800 mb-2 flex items-center gap-2"><span>🏷️</span> Líneas de Producción (Maquila)</h3>
+                            <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                <li>Pantalones Ind. & Camisolas</li>
+                                <li>Batas & Overoles</li>
+                                <li>Mandiles, Cofias, Cubre bocas</li>
+                                <li>Ropa Desechable</li>
+                            </ul>
+                        </div>
+                        <div class="bg-teal-50 p-4 rounded-xl border border-teal-100">
+                            <h3 class="font-bold text-teal-800 mb-2 flex items-center gap-2"><span>🎯</span> El Reto de Innovación</h3>
+                            <p class="text-sm text-teal-700">
+                                Crear algo <strong>nuevo y patentable</strong> que cumpla simultáneamente con mejorar la <em>Imagen Corporativa</em> y la <em>Seguridad</em>, pero que sea 100% viable para ser manufacturado en una línea de maquila tradicional sin requerir maquinaria futurista.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <button onclick="switchTab('invencion')" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 shadow-sm transition-all hover:shadow-md">
+                        Descubrir la Invención ➔
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: LA INVENCIÓN -->
+        <section id="invencion" class="tab-content">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-sm font-bold tracking-widest text-rust-600 uppercase mb-2">Propuesta de Patente</h2>
+                    <h1 class="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-4">Cinta de Fusión Activa Termo-Mecánica (C-AFT) y Costura "Safe-Snap"</h1>
+                    <p class="text-lg text-stone-600 max-w-3xl mx-auto">
+                        Una innovación diseñada específicamente para la maquila. No cambiamos la tela, cambiamos <strong>el método de unión y los avíos</strong>. Introducimos interactividad estructural a los uniformes de catálogo sin alterar la línea de ensamble.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    
+                    <!-- Interactive Visualizer (NO SVG, pure CSS/HTML) -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-stone-800 mb-4 text-center">Simulador de Funciones del Uniforme</h3>
+                        <p class="text-xs text-stone-500 text-center mb-6">Haz clic en los puntos interactivos para explorar las innovaciones patentables.</p>
+                        
+                        <!-- Abstract CSS Garment Structure -->
+                        <div class="relative w-full max-w-sm mx-auto aspect-[3/4] bg-stone-100 rounded-3xl border border-stone-300 shadow-inner flex flex-col items-center justify-start pt-10">
+                            
+                            <!-- Shirt -->
+                            <div class="w-40 h-44 bg-teal-800 rounded-t-2xl relative shadow-md">
+                                <!-- Collar -->
+                                <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-16 h-4 bg-teal-900 rounded-t-full"></div>
+                                <!-- Sleeves -->
+                                <div class="absolute top-2 -left-12 w-14 h-24 bg-teal-800 rounded-l-xl rotate-[20deg] transform origin-top-right border-r border-teal-900"></div>
+                                <div class="absolute top-2 -right-12 w-14 h-24 bg-teal-800 rounded-r-xl -rotate-[20deg] transform origin-top-left border-l border-teal-900"></div>
+                                <!-- Reflective/Active Tape (Horizontal) -->
+                                <div class="absolute top-24 w-full h-3 bg-stone-300 shadow-sm flex items-center justify-center">
+                                    <div class="w-full h-0.5 bg-stone-400"></div>
+                                </div>
+                                <!-- Corporate Logo area -->
+                                <div class="absolute top-8 left-4 w-6 h-6 bg-stone-200 rounded flex items-center justify-center text-[8px] font-bold text-teal-800">LOGO</div>
+
+                                <!-- HOTSPOTS -->
+                                <button onclick="showFeature('safesnap')" class="absolute top-1 -left-4 w-8 h-8 focus:outline-none group z-10">
+                                    <span class="absolute inline-flex h-full w-full rounded-full bg-rust-400 opacity-75 animate-ping group-hover:hidden"></span>
+                                    <span class="relative inline-flex rounded-full h-8 w-8 bg-rust-500 border-2 border-white shadow text-white font-bold text-xs items-center justify-center transition-transform transform hover:scale-110">1</span>
+                                </button>
+
+                                <button onclick="showFeature('thermo')" class="absolute top-8 left-4 w-8 h-8 focus:outline-none group z-10">
+                                    <span class="absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75 animate-ping group-hover:hidden"></span>
+                                    <span class="relative inline-flex rounded-full h-8 w-8 bg-teal-500 border-2 border-white shadow text-white font-bold text-xs items-center justify-center transition-transform transform hover:scale-110">2</span>
+                                </button>
+                            </div>
+
+                            <!-- Pants -->
+                            <div class="w-36 h-48 bg-stone-800 rounded-b-xl relative flex justify-between shadow-md">
+                                <div class="w-[48%] h-full bg-stone-800 rounded-bl-xl border-r border-stone-900 relative">
+                                    <!-- Reflective/Active Tape (Leg) -->
+                                    <div class="absolute bottom-10 w-full h-3 bg-stone-300 shadow-sm flex items-center justify-center">
+                                        <div class="w-full h-0.5 bg-stone-400"></div>
+                                    </div>
+                                </div>
+                                <div class="w-[48%] h-full bg-stone-800 rounded-br-xl relative">
+                                    <!-- Reflective/Active Tape (Leg) -->
+                                    <div class="absolute bottom-10 w-full h-3 bg-stone-300 shadow-sm flex items-center justify-center">
+                                        <div class="w-full h-0.5 bg-stone-400"></div>
+                                    </div>
+                                </div>
+
+                                <!-- HOTSPOT -->
+                                <button onclick="showFeature('trace')" class="absolute bottom-8 right-0 w-8 h-8 focus:outline-none group z-10">
+                                    <span class="absolute inline-flex h-full w-full rounded-full bg-stone-400 opacity-75 animate-ping group-hover:hidden"></span>
+                                    <span class="relative inline-flex rounded-full h-8 w-8 bg-stone-500 border-2 border-white shadow text-white font-bold text-xs items-center justify-center transition-transform transform hover:scale-110">3</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Description Panel -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 h-full flex flex-col justify-center min-h-[400px]">
+                        <div id="feature-placeholder" class="text-center">
+                            <div class="text-5xl mb-4">👆</div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-2">Interactúa con el Modelo</h3>
+                            <p class="text-stone-500">Selecciona un número en el diagrama de la izquierda para descubrir cómo la maquila estándar puede integrar tecnología patentable.</p>
+                        </div>
+
+                        <!-- Feature 1 -->
+                        <div id="feature-safesnap" class="hidden animate-fadeIn">
+                            <span class="inline-block px-3 py-1 bg-rust-100 text-rust-700 text-xs font-bold rounded-full mb-3 uppercase tracking-wide">Patente de Seguridad 1</span>
+                            <h3 class="text-2xl font-serif font-bold text-stone-900 mb-3">Costura "Safe-Snap" Anti-Atrapamiento</h3>
+                            <p class="text-stone-600 mb-4">El mayor riesgo en manufactura es que la manga (camisola o bata) se atasque en una máquina rodante, amputando o arrastrando al obrero.</p>
+                            <p class="text-stone-600 font-medium mb-4"><strong>La Innovación:</strong> Un hilo de Kevlar-Algodón calibrado en la maquila. Resiste el trabajo rudo diario (hasta 20kg de fuerza), pero <em>se desgarra limpiamente</em> si experimenta un tirón superior a 40kg, liberando el brazo del trabajador instantáneamente.</p>
+                            <div class="bg-stone-50 p-3 rounded-lg border border-stone-200 text-sm">
+                                <strong>Ventaja en Maquila:</strong> Se aplica con las mismas máquinas Overlock y Rectas. Solo se cambia el cono de hilo en la unión del hombro.
+                            </div>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div id="feature-thermo" class="hidden animate-fadeIn">
+                            <span class="inline-block px-3 py-1 bg-teal-100 text-teal-700 text-xs font-bold rounded-full mb-3 uppercase tracking-wide">Patente de Imagen & Alerta</span>
+                            <h3 class="text-2xl font-serif font-bold text-stone-900 mb-3">Identidad Termocrómica (Logo Activo)</h3>
+                            <p class="text-stone-600 mb-4">Cumpliendo con la necesidad de "mejorar la imagen corporativa y la seguridad" extraída de tus objetivos.</p>
+                            <p class="text-stone-600 font-medium mb-4"><strong>La Innovación:</strong> El logo de la empresa y partes de la cinta C-AFT se bordan o imprimen (transfer) con tintas microencapsuladas reactivas. A temperatura ambiente, muestran los colores corporativos. Si el ambiente supera los 42°C (riesgo de golpe de calor industrial), el logo y las cintas cambian a <strong>rojo brillante/naranja neón</strong>.</p>
+                            <div class="bg-stone-50 p-3 rounded-lg border border-stone-200 text-sm">
+                                <strong>Ventaja Comercial:</strong> El cliente (la fábrica que compra tus uniformes) protege visualmente a sus obreros mientras luce su marca.
+                            </div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div id="feature-trace" class="hidden animate-fadeIn">
+                            <span class="inline-block px-3 py-1 bg-stone-200 text-stone-700 text-xs font-bold rounded-full mb-3 uppercase tracking-wide">Valor Agregado IoT</span>
+                            <h3 class="text-2xl font-serif font-bold text-stone-900 mb-3">Trazabilidad Tejida en Dobladillo</h3>
+                            <p class="text-stone-600 mb-4">La seguridad industrial depende de desechar el equipo cuando termina su vida útil real, no cuando "se ve viejo".</p>
+                            <p class="text-stone-600 font-medium mb-4"><strong>La Innovación:</strong> Durante el dobladillado en la maquila, se inserta una micro-etiqueta pasiva (NFC) lavable. Permite a la empresa escanear el pantalón/bata con un celular para saber: cuántas lavadas tiene, quién es el dueño, y si aún cumple la norma de seguridad.</p>
+                            <div class="bg-stone-50 p-3 rounded-lg border border-stone-200 text-sm">
+                                <strong>Modelo de Negocio:</strong> Convierte a tu maquila de un "vendedor de ropa" a un "proveedor de hardware de seguridad", permitiendo cobrar suscripciones de reposición automática.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: DATOS Y MERCADO -->
+        <section id="datos" class="tab-content">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-10">
+                    <h1 class="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-4">Viabilidad y Análisis de Mercado</h1>
+                    <p class="text-lg text-stone-600 max-w-3xl mx-auto">
+                        Justificación de negocio para la adopción de la tecnología C-AFT en la maquila frente a la producción tradicional de ropa de trabajo.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Chart 1: Value Comparison -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-stone-800 mb-2">Evaluación de Valor Competitivo</h3>
+                        <p class="text-sm text-stone-500 mb-6">Comparativa de atributos entre el uniforme estándar de catálogo y el uniforme con patente C-AFT.</p>
+                        <div class="chart-container">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">Datos proyectados en escala de 1 a 100.</p>
+                    </div>
+
+                    <!-- Chart 2: Safety Impact -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-stone-800 mb-2">Impacto Proyectado en Seguridad Industrial</h3>
+                        <p class="text-sm text-stone-500 mb-6">Reducción estimada de incidentes graves por cada 1,000 trabajadores operativos al año.</p>
+                        <div class="chart-container">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                         <p class="text-xs text-stone-400 mt-4 text-center">Basado en mitigación pasiva (visibilidad/temperatura) y activa (ruptura controlada).</p>
+                    </div>
+
+                </div>
+
+                <!-- Closing statement -->
+                <div class="mt-12 bg-teal-900 text-white p-8 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mr-8 -mt-8 w-64 h-64 rounded-full border-4 border-teal-700 opacity-20"></div>
+                    <h2 class="text-2xl font-serif font-bold mb-4 relative z-10">Conclusión Operativa</h2>
+                    <p class="text-teal-50 relative z-10 text-lg mb-6 max-w-4xl leading-relaxed">
+                        El objetivo de "Diseñar y confeccionar para mejorar la imagen y la seguridad" se cumple sin necesidad de re-equipar toda la fábrica maquiladora. Al patentar los <strong>avíos</strong> (cintas termocrómicas y metodologías de costura anti-tensión), el producto final pasa de ser un <em>commodity</em> (ropa) a ser un <strong>Equipo de Protección Personal (EPP) de Alta Ingeniería</strong>, justificando un margen de ganancia superior de hasta un 40% frente a la competencia tradicional.
+                    </p>
+                    <div class="relative z-10 font-medium flex items-center gap-2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                        Listo para fase de prototipado en línea recta y overlock.
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-stone-200 bg-white py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-stone-500">
+            Concepto de Innovación basado en el Análisis de Objetivos de Maquila. Creado dinámicamente.
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Navigation Logic ---
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show target tab
+            document.getElementById(tabId).classList.add('active');
+
+            // Update desktop nav styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if(btn.dataset.target === tabId) {
+                    btn.classList.remove('text-stone-500', 'border-transparent', 'hover:text-stone-700', 'hover:border-stone-300');
+                    btn.classList.add('text-teal-700', 'border-teal-700');
+                } else {
+                    btn.classList.add('text-stone-500', 'border-transparent', 'hover:text-stone-700', 'hover:border-stone-300');
+                    btn.classList.remove('text-teal-700', 'border-teal-700');
+                }
+            });
+
+            // Update mobile nav styling
+            document.querySelectorAll('.nav-btn-mobile').forEach(btn => {
+                if(btn.dataset.target === tabId) {
+                    btn.classList.remove('text-stone-600');
+                    btn.classList.add('text-teal-700', 'bg-teal-50', 'rounded');
+                } else {
+                    btn.classList.add('text-stone-600');
+                    btn.classList.remove('text-teal-700', 'bg-teal-50', 'rounded');
+                }
+            });
+
+            // Trigger chart rendering if 'datos' tab is selected to ensure correct sizing within display:block
+            if(tabId === 'datos') {
+                initCharts();
+            }
+        }
+
+        // --- Interactive Model Logic ---
+        function showFeature(featureId) {
+            // Hide placeholder and all features
+            document.getElementById('feature-placeholder').classList.add('hidden');
+            ['safesnap', 'thermo', 'trace'].forEach(id => {
+                document.getElementById('feature-' + id).classList.add('hidden');
+            });
+            
+            // Show selected feature
+            document.getElementById('feature-' + featureId).classList.remove('hidden');
+        }
+
+        // --- Chart.js Data and Initialization ---
+        let chartsInitialized = false;
+
+        function initCharts() {
+            if(chartsInitialized) return;
+
+            // Chart Configuration variables (Colors based on Tailwind palette)
+            const colorTeal = '#0d9488';
+            const colorTealBg = 'rgba(13, 148, 136, 0.2)';
+            const colorStone = '#78716c';
+            const colorStoneBg = 'rgba(120, 113, 108, 0.2)';
+            const colorRust = '#d97706';
+
+            // 1. Radar Chart: Value Comparison
+            const ctxRadar = document.getElementById('radarChart').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Seguridad Física', 'Imagen Corporativa', 'Durabilidad', 'Trazabilidad/Datos', 'Facilidad de Maquila'],
+                    datasets: [{
+                        label: 'Uniforme ProTex C-AFT',
+                        data: [95, 90, 85, 95, 80],
+                        fill: true,
+                        backgroundColor: colorTealBg,
+                        borderColor: colorTeal,
+                        pointBackgroundColor: colorTeal,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: colorTeal
+                    }, {
+                        label: 'Uniforme Estándar',
+                        data: [50, 60, 70, 10, 95],
+                        fill: true,
+                        backgroundColor: colorStoneBg,
+                        borderColor: colorStone,
+                        pointBackgroundColor: colorStone,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: colorStone
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.05)' },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            pointLabels: {
+                                font: { family: 'Inter', size: 11 },
+                                color: '#57534e'
+                            },
+                            ticks: { display: false, min: 0, max: 100 }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: 'Inter' } } },
+                        tooltip: { backgroundColor: '#292524', titleFont: { family: 'Inter' }, bodyFont: { family: 'Inter' } }
+                    }
+                }
+            });
+
+            // 2. Bar Chart: Accident Reduction
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Atrapamiento en Maquinaria', 'Golpe de Calor', 'Atropello (Poca Visibilidad)'],
+                    datasets: [
+                        {
+                            label: 'Incidentes (Tradicional)',
+                            data: [45, 80, 30],
+                            backgroundColor: colorStone,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Incidentes (ProTex C-AFT)',
+                            data: [5, 15, 8],
+                            backgroundColor: colorRust,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { font: { family: 'Inter' }, color: '#57534e' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { 
+                                font: { family: 'Inter', size: 11 }, 
+                                color: '#57534e',
+                                // Custom label wrapping logic for Chart.js
+                                callback: function(value) {
+                                    let label = this.getLabelForValue(value);
+                                    if(label.length > 16) {
+                                        let words = label.split(' ');
+                                        let lines = [];
+                                        let currentLine = '';
+                                        for(let i=0; i<words.length; i++){
+                                            if((currentLine + words[i]).length > 16) {
+                                                lines.push(currentLine.trim());
+                                                currentLine = words[i] + ' ';
+                                            } else {
+                                                currentLine += words[i] + ' ';
+                                            }
+                                        }
+                                        lines.push(currentLine.trim());
+                                        return lines;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: 'Inter' } } },
+                        tooltip: { backgroundColor: '#292524', titleFont: { family: 'Inter' }, bodyFont: { family: 'Inter' } }
+                    }
+                }
+            });
+
+            chartsInitialized = true;
+        }
+    </script>
 </body>
 </html>
